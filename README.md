@@ -108,6 +108,8 @@ python app.py
 }
 ```
 
+[Postman screenshot of example](instance/r.png)
+
 ### Populate Database (Demo) Using Python script
 
 I have created `populate.py` with task data (10 tasks with title, description, completed). You can change it it's just better than manually entering tasks 1 by 1 just to check.
