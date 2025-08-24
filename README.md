@@ -108,7 +108,7 @@ python app.py
 }
 ```
 
-[Postman screenshot of example](instance/r.png)
+![Project Diagram](instance/r.png)
 
 ### Populate Database (Demo) Using Python script
 
