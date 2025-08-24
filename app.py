@@ -21,6 +21,13 @@ class Task(db.Model):
         }
 
 
+@app.route("/")
+def index():
+    return (
+        "Welcome to the Task Manager API!. Go to /tasks endpoint to manage your tasks."
+    )
+
+
 @app.route("/tasks", methods=["POST"])
 def create_task():
     data = request.get_json()
@@ -38,24 +45,33 @@ def get_tasks():
 
 @app.route("/tasks/<int:task_id>", methods=["GET"])
 def get_task(task_id):
-    task = Task.query.get_or_404(task_id)
-    return jsonify(task.to_dict()), 200
+    task = Task.query.get(task_id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+    return jsonify(task.to_dict())
 
 
 @app.route("/tasks/<int:task_id>", methods=["PUT"])
 def update_task(task_id):
-    task = Task.query.get_or_404(task_id)
+    task = Task.query.get(task_id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+
     data = request.get_json()
     task.title = data.get("title", task.title)
     task.description = data.get("description", task.description)
     task.completed = data.get("completed", task.completed)
+
     db.session.commit()
-    return jsonify(task.to_dict()), 200
+    return jsonify(task.to_dict())
 
 
 @app.route("/tasks/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
-    task = Task.query.get_or_404(task_id)
+    task = Task.query.get(task_id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+
     db.session.delete(task)
     db.session.commit()
     return "", 204
