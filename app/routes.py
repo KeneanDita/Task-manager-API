@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from .models import Task
 from . import db
 
@@ -8,13 +8,7 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/", methods=["GET"])
 def home():
-    return (
-        """
-    <h1>Welcome to the Task Manager API</h1>
-    <p>Use the <code>/tasks/</code> endpoint to access tasks.</p>
-    """,
-        200,
-    )
+    return render_template("home.html")
 
 
 # Create task
@@ -35,6 +29,10 @@ def create_task():
 @task_bp.route("/", methods=["GET"])
 def get_tasks():
     tasks = Task.query.all()
+    # Check if request is from browser (wants HTML) or API (wants JSON)
+    if request.accept_mimetypes.accept_html and \
+       request.accept_mimetypes.best_match(['text/html', 'application/json']) == 'text/html':
+        return render_template("tasks.html", tasks=tasks)
     return jsonify([task.to_dict() for task in tasks])
 
 
