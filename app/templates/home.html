@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Task Manager{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to Task Manager</h1>
+            <p class="hero-subtitle">Organize your tasks efficiently and boost your productivity</p>
+            <div class="hero-features">
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Easy to Use</h3>
+                    <p>Simple and intuitive interface to manage your tasks</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Stay Organized</h3>
+                    <p>Keep track of all your tasks in one place</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast & Responsive</h3>
+                    <p>Quick loading and works on all devices</p>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <a href="/tasks/" class="btn btn-primary btn-large">Get Started with Tasks</a>
+                <p class="cta-hint">Click above to view and manage your tasks</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="info-section">
+    <div class="container">
+        <h2>Features</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <h3>📝 Create Tasks</h3>
+                <p>Add new tasks with title and description</p>
+            </div>
+            <div class="info-item">
+                <h3>✏️ Edit Tasks</h3>
+                <p>Update task details anytime</p>
+            </div>
+            <div class="info-item">
+                <h3>✔️ Mark Complete</h3>
+                <p>Track your progress by marking tasks as done</p>
+            </div>
+            <div class="info-item">
+                <h3>🗑️ Delete Tasks</h3>
+                <p>Remove tasks you no longer need</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

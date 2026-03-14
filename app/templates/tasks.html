@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks - Task Manager{% endblock %}
+
+{% block content %}
+<div class="tasks-header">
+    <div class="container">
+        <h1>My Tasks</h1>
+        <button class="btn btn-primary" onclick="showAddTaskModal()">+ Add New Task</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="tasks-stats">
+        <div class="stat-card">
+            <div class="stat-number" id="total-tasks">{{ tasks|length }}</div>
+            <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card stat-success">
+            <div class="stat-number" id="completed-tasks">{{ tasks|selectattr('completed')|list|length }}</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card stat-warning">
+            <div class="stat-number" id="pending-tasks">{{ tasks|rejectattr('completed')|list|length }}</div>
+            <div class="stat-label">Pending</div>
+        </div>
+    </div>
+
+    <div class="tasks-filter">
+        <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+        <button class="filter-btn" onclick="filterTasks('pending')">Pending</button>
+        <button class="filter-btn" onclick="filterTasks('completed')">Completed</button>
+    </div>
+
+    <div class="tasks-list" id="tasks-list">
+        {% if tasks %}
+            {% for task in tasks %}
+            <div class="task-card {{ 'completed' if task.completed else 'pending' }}" data-status="{{ 'completed' if task.completed else 'pending' }}" data-task-id="{{ task.id }}">
+                <div class="task-header">
+                    <div class="task-checkbox">
+                        <input type="checkbox"
+                               id="task-{{ task.id }}"
+                               {{ 'checked' if task.completed else '' }}
+                               onchange="toggleTaskStatus({{ task.id }}, this.checked)">
+                        <label for="task-{{ task.id }}"></label>
+                    </div>
+                    <h3 class="task-title {{ 'strikethrough' if task.completed else '' }}">{{ task.title }}</h3>
+                    <div class="task-actions">
+                        <button class="btn-icon btn-edit" onclick="editTask({{ task.id }})" title="Edit">✏️</button>
+                        <button class="btn-icon btn-delete" onclick="deleteTask({{ task.id }})" title="Delete">🗑️</button>
+                    </div>
+                </div>
+                {% if task.description %}
+                <p class="task-description">{{ task.description }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>No tasks yet</h3>
+                <p>Create your first task to get started!</p>
+                <button class="btn btn-primary" onclick="showAddTaskModal()">Add Task</button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Add Task Modal -->
+<div id="addTaskModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Task</h2>
+            <span class="close" onclick="closeAddTaskModal()">&times;</span>
+        </div>
+        <form id="addTaskForm" onsubmit="addTask(event)">
+            <div class="form-group">
+                <label for="taskTitle">Title *</label>
+                <input type="text" id="taskTitle" name="title" required maxlength="120" placeholder="Enter task title">
+            </div>
+            <div class="form-group">
+                <label for="taskDescription">Description</label>
+                <textarea id="taskDescription" name="description" maxlength="255" rows="4" placeholder="Enter task description (optional)"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeAddTaskModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Task</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Task Modal -->
+<div id="editTaskModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edit Task</h2>
+            <span class="close" onclick="closeEditTaskModal()">&times;</span>
+        </div>
+        <form id="editTaskForm" onsubmit="updateTask(event)">
+            <input type="hidden" id="editTaskId" name="id">
+            <div class="form-group">
+                <label for="editTaskTitle">Title *</label>
+                <input type="text" id="editTaskTitle" name="title" required maxlength="120" placeholder="Enter task title">
+            </div>
+            <div class="form-group">
+                <label for="editTaskDescription">Description</label>
+                <textarea id="editTaskDescription" name="description" maxlength="255" rows="4" placeholder="Enter task description (optional)"></textarea>
+            </div>
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="editTaskCompleted" name="completed">
+                <label for="editTaskCompleted">Mark as completed</label>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeEditTaskModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Task</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="notification" class="notification"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/tasks.js') }}"></script>
+{% endblock %}
